@@ -12,25 +12,29 @@ def home():
     st.markdown('<div class="promo">Promo hari ini · Gratis ongkir untuk pembelian di atas Rp 500.000</div>',unsafe_allow_html=True)
     st.markdown('<div class="eyebrow" style="margin:.75rem 0">Kategori</div>',unsafe_allow_html=True)
     labels=[("AT","Atasan"),("KM","Kemeja"),("HD","Hoodie"),("CL","Celana"),("OT","Outer"),("SL","Semua")]
-    category_html=''.join(f'<div class="category-shortcut"><div class="category-icon">{icon}</div><div class="category-name">{label}</div></div>' for icon,label in labels)
-    st.markdown(f'<div class="category-rail">{category_html}</div>',unsafe_allow_html=True)
+    with st.container(key="desktop-categories"):
+        for col,(icon,label) in zip(st.columns(6),labels):
+            with col: st.markdown(f'<div class="category-icon">{icon}</div><div class="category-name">{label}</div>',unsafe_allow_html=True)
+    mobile_categories=''.join(f'<div class="mobile-category-item"><div class="mobile-category-icon">{icon}</div>{label}</div>' for icon,label in labels)
+    st.markdown(f'<div class="mobile-category-rail">{mobile_categories}</div>',unsafe_allow_html=True)
     st.markdown('<div class="line" style="margin-top:1.1rem"></div>',unsafe_allow_html=True)
     with st.container(key="home-hero"):
         a,b=st.columns([1,1.05],gap="large")
         with a:
-            st.markdown('<div class="market-banner"><div class="eyebrow">Promo koleksi terbaru</div><h1>Diskon hingga 30%</h1><p class="muted">Pilihan pakaian sehari-hari dengan harga khusus untuk periode terbatas.</p></div>',unsafe_allow_html=True)
+            st.markdown('<div class="market-banner"><div class="eyebrow">Promo koleksi terbaru</div><h1>Diskon hingga 30%</h1><p class="muted">Pilihan pakaian sehari-hari dengan harga khusus untuk periode terbatas.</p>',unsafe_allow_html=True)
             if st.button("Belanja Sekarang",type="primary"): navigate("Koleksi")
-        with b: st.image("https://images.unsplash.com/photo-1496217590455-aa63a8350eea?auto=format&fit=crop&w=1200&q=85",use_container_width=True)
+            st.markdown('</div>',unsafe_allow_html=True)
+        with b: st.markdown('<div class="hero-image">',unsafe_allow_html=True);st.image("https://images.unsplash.com/photo-1496217590455-aa63a8350eea?auto=format&fit=crop&w=1200&q=85",use_container_width=True);st.markdown('</div>',unsafe_allow_html=True)
     section("Promo pilihan","Flash Sale")
-    with st.container(key="home-grid"):
+    with st.container(key="mobile-grid-featured"):
         for col,p in zip(st.columns(4),PRODUCTS[:4]):
             with col: product_card(p,"featured")
     section("Produk terlaris","Pilihan untuk Anda")
-    with st.container(key="home-grid-two"):
+    with st.container(key="mobile-grid-new"):
         for col,p in zip(st.columns(4),PRODUCTS[4:8]):
             with col: product_card(p,"new")
     section("Rekomendasi produk","Temukan produk lainnya")
-    with st.container(key="home-grid-three"):
+    with st.container(key="mobile-grid-recommend"):
         for col,p in zip(st.columns(4),PRODUCTS[8:12]):
             with col: product_card(p,"recommend")
     footer()
@@ -45,7 +49,7 @@ def catalog():
     if sorting=="Harga terendah":items.sort(key=lambda x:x["price"])
     if sorting=="Harga tertinggi":items.sort(key=lambda x:x["price"],reverse=True)
     st.caption(f"Menampilkan {len(items)} produk")
-    with st.container(key="catalog-grid"):
+    with st.container(key="mobile-grid-catalog"):
         for start in range(0,len(items),4):
             for col,p in zip(st.columns(4),items[start:start+4]):
                 with col:product_card(p,"catalog")
